@@ -1,0 +1,68 @@
+*********************************************************************
+*                                                         README                                                           *
+*                                                                                                                                      *
+*                                     Legacy Emulation Assistant (Release 1)                              *
+*                                                                                                                                      *
+*********************************************************************
+
+=======================================================================
+How to create Certificate to Sign Script
+=======================================================================
+-  yourkey can be changed to whatever you want your key to be named
+-  yourcert.crt can be changed to whatever you want it to be named, but must have .crt extension
+-  RunExecutable.java and RunExecutable.class should be the name of whichever java file you
+   want to sign. In this case, we want RunExecutable.java to be signed.
+
+Enter:
+	keytool -genkey -kesyalg rsa -alias yourkey
+
+Now we make the certificate:
+	keytool -export -alias yourkey -file yourcert.crt
+
+Now we have to sign the applet. Just make a *.bat file including this:
+	javac RunExecutable.java
+	jar cvf RunExecutable.jar RunExecutable.class
+	jarsigner RunExecutable.jar yourkey
+
+The batch-file compiles the applet, makes a jar-archive and signs the jar-file.
+
+The HTML-code to display the applet:
+	<applet code="RunExecutable.class" archive="RunExecutable.jar" width="600" height="500">
+	<param name="exePath" value="C:\Legacy Emulation Assistant\Legacy Emulation Assistant.exe">
+                  <param name="afsPath" value="\\afs\iu.edu\public\sudoc\volumes\04\30000038669341\30000038669341.iso">
+	</applet>
+
+- param "exePath" is the path to where Install.exe will put Legacy Emulation Assistant.exe
+- param "afsPath" will be the path to an .ISO image from a web page.
+       Example: A user clicks a button, from a web page, to open an .ISO, "afsPath" should be the path to that .ISO
+
+Source for signing script: http://www.captain.at/programming/java/
+
+NOTE:   For the java code and certificate to work like you want them to, RunExecutable.class,
+               RunExecutable.jar and myCert2.crt must be in the same directory as the html file
+               that contains the applet.
+
+=======================================================================
+ Build Legacy Emulation Assistant
+=======================================================================
+1. Open the solution (.sln) file in Mircrosoft Visual Studio 2008.
+        - This should be either AFSBrowser.sln or possibly Legacy Emulation Assistant.sln
+2. Click on Build, then Build Solution.
+3. Now go to AFSBrowser directory and you can find the .EXE in ...\AFSBrowser\bin\Debug\
+4. If you leave the .EXE in this location, you can run it and it should work. If you want to move 
+     AFSBrowser.exe to another location you must also move the Interop.VixCOM.dll file to the 
+     same new location. In short, AFSBrowser.exe and Interop.VixCOM.dll must be in the same
+     directory for the program to work.
+  
+=======================================================================
+Build Install
+======================================================================= 
+1. Open the solution (.sln) file in Mircrosoft Visual Studio 2008.
+2. Click on Build, then Build Solution.
+3. Now go to Install directory and you can find the .EXE in ...\Install\bin\Debug\
+4. If you leave the .EXE in this location, you can run it and it should work. If you want to move 
+     Install.exe to another location you must also move the Interop.VixCOM.dll file AND 
+     AFSBrowser.exeto the same new location. In short, all three of these files must be in the 
+     same directory for the program to work successfully.
+
+________________________________________________________________________________ [THE END]
